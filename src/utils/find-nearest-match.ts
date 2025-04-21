@@ -15,12 +15,16 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const findNearestMatch = async ({ embeddings }: IFindNearestMatch) => {
-  const { data } = await supabase.rpc("match_movies", {
-    query_embedding: embeddings,
-    match_threshold: 0.5,
-    match_count: 4,
-  });
+  try {
+    const { data } = await supabase.rpc("match_movies", {
+      query_embedding: embeddings,
+      match_threshold: 0.5,
+      match_count: 4,
+    });
 
-  // Manage multiple returned matches
-  return (data as MatchData[]).map((obj) => obj.content).join("\n");
+    // Manage multiple returned matches
+    return (data as MatchData[]).map((obj) => obj.content).join("\n");
+  } catch (error) {
+    console.error("Error fetching nearest match:", error);
+  }
 };

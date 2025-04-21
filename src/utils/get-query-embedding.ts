@@ -6,13 +6,17 @@ export const getQueryEmbeddings = async ({
 }: {
   question: string;
 }) => {
-  const response = await sendWorkerRequest({
-    url: `${WORKER_URL}/api/embeddings`,
-    options: {
-      method: "POST",
-      body: question,
-    },
-  });
+  try {
+    const response = await sendWorkerRequest({
+      url: `${WORKER_URL}/api/embeddings`,
+      options: {
+        method: "POST",
+        body: question,
+      },
+    });
 
-  return response;
+    return response;
+  } catch (error) {
+    console.error("Error fetching query embeddings:", error);
+  }
 };
