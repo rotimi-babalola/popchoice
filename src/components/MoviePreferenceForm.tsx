@@ -11,7 +11,7 @@ const MoviePreferenceForm: React.FC = () => {
     handlePreferenceChange,
     handleSubmit,
     recommendation,
-    isPending,
+    isLoading,
     resetRecommendations,
   } = useMoviePreference();
 
@@ -29,7 +29,7 @@ const MoviePreferenceForm: React.FC = () => {
     !preferences.favoriteMovie ||
     !preferences.newOrClassic ||
     !preferences.funOrSerious ||
-    isPending;
+    isLoading;
 
   return (
     <div className="bg-indigo-950 flex flex-col items-center justify-center p-6 font-sans">
@@ -90,7 +90,7 @@ const MoviePreferenceForm: React.FC = () => {
             }
           `}
             >
-              {isPending ? (
+              {isLoading ? (
                 <>
                   <Spinner size="w-6 h-6" color="text-indigo-700" />
                   <span>Processing...</span>

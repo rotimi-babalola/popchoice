@@ -28,7 +28,7 @@ async function splitDocument(documentPath: string) {
 Store all embeddings and corresponding text in Supabase. */
 async function createAndStoreEmbeddings() {
   try {
-    const chunkData = await splitDocument("./movies.txt");
+    const chunkData = await splitDocument("./movies-2.txt");
     const data = await Promise.all(
       chunkData.map(async (chunk) => {
         const embeddingResponse = await openai.embeddings.create({

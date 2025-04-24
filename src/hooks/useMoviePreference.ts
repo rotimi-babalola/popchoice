@@ -18,6 +18,8 @@ export const useMoviePreference = () => {
     funOrSerious: "",
   });
 
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+
   const { getRecommendations, data, isError, isPending, reset } =
     useGetRecommendations();
 
@@ -35,24 +37,31 @@ export const useMoviePreference = () => {
   };
 
   const getMovies = async () => {
-    // convert the user preferences to embeddings
-    const embeddings = await getQueryEmbeddings({ question });
+    setIsLoadingDetails(true);
+    try {
+      // convert the user preferences to embeddings
+      const embeddings = await getQueryEmbeddings({ question });
 
-    // use embeddings vector to query the supabase vector database
-    const matches = await findNearestMatch({ embeddings });
+      // use embeddings vector to query the supabase vector database
+      const matches = await findNearestMatch({ embeddings });
 
-    const messages = [
-      {
-        role: "system",
-        content: movieRecommendationPrompt,
-      },
-      {
-        role: "user",
-        content: `Context: ${matches} ${question}`,
-      },
-    ];
+      const messages = [
+        {
+          role: "system",
+          content: movieRecommendationPrompt,
+        },
+        {
+          role: "user",
+          content: `Context: ${matches} ${question}`,
+        },
+      ];
 
-    getRecommendations({ messages });
+      getRecommendations({ messages });
+    } catch (error) {
+      console.error("Error fetching movie details:", error);
+    } finally {
+      setIsLoadingDetails(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -66,7 +75,9 @@ export const useMoviePreference = () => {
     handleSubmit,
     recommendation: data,
     isError,
-    isPending,
+    isLoading: isLoadingDetails || isPending,
+    isLoadingDetails,
+    isPendingRecommendation: isPending,
     resetRecommendations: reset,
   };
 };
