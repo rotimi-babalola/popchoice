@@ -4,18 +4,19 @@ import { movieRecommendationPrompt } from "../prompts";
 import { useGetRecommendations } from "./useGetRecommendations";
 import { getQueryEmbeddings } from "../utils/get-query-embedding";
 import { findNearestMatch } from "../utils/find-nearest-match";
+import { Era, Mood } from "../components/MoodSelection";
 
 type MoviePreferences = {
   favoriteMovie: string;
-  newOrClassic: string;
-  funOrSerious: string;
+  era: Era;
+  mood: Mood;
 };
 
 export const useMoviePreference = () => {
   const [preferences, setPreferences] = useState<MoviePreferences>({
     favoriteMovie: "",
-    newOrClassic: "",
-    funOrSerious: "",
+    era: null,
+    mood: null,
   });
 
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
@@ -23,7 +24,9 @@ export const useMoviePreference = () => {
   const { getRecommendations, data, isError, isPending, reset } =
     useGetRecommendations();
 
-  const question = `Question: ${preferences.favoriteMovie}, ${preferences.newOrClassic}, ${preferences.funOrSerious}. Got any recommendations for me?`;
+  const question = `Question: My favourite movie is: ${preferences.favoriteMovie}., 
+    Right now I’d like a ${preferences.era} film that feels ${preferences.mood}.  
+    What should I watch next?`;
 
   const handlePreferenceChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
