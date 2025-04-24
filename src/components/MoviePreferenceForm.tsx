@@ -3,6 +3,7 @@ import PopChoiceLogo from "../assets/PopChoiceIcon.svg";
 import { useMoviePreference } from "../hooks/useMoviePreference";
 import { MovieRecommendation } from "./MovieRecommendation";
 import Spinner from "./Spinner";
+import MoodSelection from "./MoodSelection";
 
 const MoviePreferenceForm: React.FC = () => {
   const {
@@ -18,8 +19,8 @@ const MoviePreferenceForm: React.FC = () => {
   const handleReset = () => {
     setPreferences({
       favoriteMovie: "",
-      newOrClassic: "",
-      funOrSerious: "",
+      era: null,
+      mood: null,
     });
 
     resetRecommendations();
@@ -27,8 +28,8 @@ const MoviePreferenceForm: React.FC = () => {
 
   const isSubmitButtonDisabled =
     !preferences.favoriteMovie ||
-    !preferences.newOrClassic ||
-    !preferences.funOrSerious ||
+    !preferences.era ||
+    !preferences.mood ||
     isLoading;
 
   return (
@@ -59,20 +60,15 @@ const MoviePreferenceForm: React.FC = () => {
                 onChange={handlePreferenceChange}
               />
 
-              <QuestionInput
-                id="newOrClassic"
-                name="newOrClassic"
-                question="Are you in the mood for something new or a classic?"
-                value={preferences.newOrClassic}
-                onChange={handlePreferenceChange}
-              />
-
-              <QuestionInput
-                id="funOrSerious"
-                name="funOrSerious"
-                question="Do you wanna have fun or do you want something serious?"
-                value={preferences.funOrSerious}
-                onChange={handlePreferenceChange}
+              <MoodSelection
+                eraOptions={["new", "classic"]}
+                moodOptions={["fun", "serious", "inspiring", "scary"]}
+                selectedEra={preferences.era}
+                selectedMood={preferences.mood}
+                onSelectEra={(era) => setPreferences({ ...preferences, era })}
+                onSelectMood={(mood) =>
+                  setPreferences({ ...preferences, mood })
+                }
               />
             </div>
 
